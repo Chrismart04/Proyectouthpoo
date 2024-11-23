@@ -2,16 +2,20 @@ import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
+
 import javax.swing.JPanel;
 import java.awt.Graphics;
 import javax.swing.Timer;
 
 public class Escenario extends JPanel implements KeyListener {
     Image fondo;
+    Random r;
     Enemigos arania1;
     Enemigos arania2;
     Enemigos arania3;
     Enemigos arania4;
+    Enemigos [] avispas;
     int velocidad = 100;
     Carteles tela1;
     Carteles tela2;
@@ -20,9 +24,11 @@ public class Escenario extends JPanel implements KeyListener {
     Animal animal1;
     Animal animal2; 
     Animal animal3;
-    Animal animal4;   
+    Animal animal4;
+
     public Escenario() {
         ImageIcon icono = new ImageIcon("imagenes/fondo.jpg");
+        r = new Random();
         fondo = icono.getImage().getScaledInstance(1200, 700, Image.SCALE_SMOOTH);
         this.setSize(1200, 700);
         this.setVisible(true);
@@ -41,9 +47,16 @@ public class Escenario extends JPanel implements KeyListener {
         animal2 = new Animal(400, 500, "imagenes/animal2.png", KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, "");
         animal3 = new Animal(400, 500, "imagenes/animal3.png", KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_J, KeyEvent.VK_L, "");
         animal4 = new Animal(400, 500, "imagenes/animal4.png", KeyEvent.VK_T, KeyEvent.VK_G, KeyEvent.VK_F, KeyEvent.VK_H, "");
-        
+        avispas = new Enemigos[10];
+
+        for (int i = 0; i < avispas.length; i++) {
+            int randomX = r.nextInt(1200); 
+            avispas[i] = new Enemigos(randomX, 50, "avispa", "imagenes/avispa.png");
+        }
+
         Timer timer = new Timer(30, e -> {
             moverAranias();
+            moverAvispas();
             animal1.mover();
             animal2.mover();
             animal3.mover();
@@ -69,6 +82,14 @@ public class Escenario extends JPanel implements KeyListener {
             arania4.setY(50);
 
         repaint();
+    }
+    public void moverAvispas() {
+        for (int i = 0; i < avispas.length; i++) {
+            avispas[i].setY(avispas[i].getY() + 5);
+            if (avispas[i].getY() > getHeight()) {
+                avispas[i].setVisible(0);
+            }
+        }
     }
     // Manejo de teclas presionadas
     public void keyPressed(KeyEvent e) {
@@ -106,5 +127,9 @@ public class Escenario extends JPanel implements KeyListener {
         animal2.dibujar(g);
         animal3.dibujar(g);
         animal4.dibujar(g);
+
+        for (int i = 0; i < avispas.length; i++) {
+            avispas[i].dibujar(g);
+        }
     }
 }
