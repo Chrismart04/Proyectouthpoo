@@ -2,10 +2,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
-import java.awt.image.ImageObserver;
 import javax.swing.ImageIcon;
 
-public class Enemigos {
+public class Enemigos { 
     protected int x;
     protected int y;
     protected int ancho;
@@ -19,19 +18,20 @@ public class Enemigos {
     protected int velocidad;
     protected int puntosDeDano;
 
-    public Enemigos(int x, int y, String tipo, String imag) {
+    // Constructor
+    public Enemigos(int x, int y, String tipo, String imag) {  
         this.x = x;
         this.y = y;
         this.tipo = tipo;
         this.imag = imag;
         this.icono = new ImageIcon(imag);
-        this.img = this.icono.getImage();
+        this.img = icono.getImage(); 
         this.visible = 1;
-        this.ancho = this.icono.getIconWidth();
-        this.alto = this.icono.getIconHeight();
-        
+        this.ancho = icono.getIconWidth(); 
+        this.alto = icono.getIconHeight(); 
+
         if (tipo.equals("arania")) {
-            this.velocidad = 1;
+            this.velocidad = 2;
             this.puntosDeDano = 100;
         } else if (tipo.equals("avispa")) {
             this.velocidad = 2;
@@ -39,6 +39,7 @@ public class Enemigos {
         }
     }
 
+    // Getters y Setters
     public int getX() {
         return this.x;
     }
@@ -93,44 +94,54 @@ public class Enemigos {
         this.img = this.icono.getImage();
     }
 
+    
     public void mover() {
-        if (tipo.equals("arania")) {
-            this.y += velocidad;
-        } else if (tipo.equals("avispa")) {
-            this.x += velocidad;
+        if (this.tipo.equals("arania")) {
+            this.y += velocidad;  
+        } else if (this.tipo.equals("avispa")) {
+            this.x += velocidad;  
         }
     }
 
+   
     public boolean detectarColision(Rectangle r) {
         this.rect = new Rectangle(this.x, this.y, this.ancho, this.alto);
-        return this.rect.intersects(r);
+        return this.rect.intersects(r); 
     }
 
+   
     public void atacar(Animal animal) {
         if (detectarColision(animal.getRectangle())) {
             animal.serPicado();
             if (this.tipo.equals("arania")) {
-                animal.perderVida();
+                animal.perderVida();  
             }
         }
     }
 
+    
     public void dibujar(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         if (this.visible == 1) {
-            g2d.drawImage(this.img, this.x, this.y, (ImageObserver) null);
+            g2d.drawImage(this.img, this.x, this.y, null); 
         }
     }
 
+    
     public int getVisible() {
         return this.visible;
     }
 
+    
     public void serPicado(int puntosDeDano) {
         this.puntosDeDano += puntosDeDano;
     }
 
     public boolean fueraDePantalla(int screenWidth, int screenHeight) {
         return this.x < 0 || this.x > screenWidth || this.y < 0 || this.y > screenHeight;
+    }
+
+    public Rectangle getRectangle() {
+        return new Rectangle(this.x, this.y, this.ancho, this.alto);
     }
 }

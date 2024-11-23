@@ -2,17 +2,21 @@ import javax.swing.ImageIcon;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
+
 import javax.swing.JPanel;
 import java.awt.Graphics;
 import javax.swing.Timer;
 
 public class Escenario extends JPanel implements KeyListener {
     Image fondo;
-    Enemigos arania1;
-    Enemigos arania2;
-    Enemigos arania3;
-    Enemigos arania4;
-    int velocidad = 100;
+    Random r;
+    Arania arania1;
+    Arania arania2;
+    Arania arania3;
+    Arania arania4;
+    Avispa [] avispas;
+    int velocidad = 8;//menos es mas rapido
     Carteles tela1;
     Carteles tela2;
     Carteles tela3;
@@ -20,9 +24,11 @@ public class Escenario extends JPanel implements KeyListener {
     Animal animal1;
     Animal animal2; 
     Animal animal3;
-    Animal animal4;   
+    Animal animal4;
+
     public Escenario() {
         ImageIcon icono = new ImageIcon("imagenes/fondo.jpg");
+        r = new Random();
         fondo = icono.getImage().getScaledInstance(1200, 700, Image.SCALE_SMOOTH);
         this.setSize(1200, 700);
         this.setVisible(true);
@@ -33,17 +39,24 @@ public class Escenario extends JPanel implements KeyListener {
         tela2 = new Carteles(400, 50, "imagenes/tela.png");
         tela3 = new Carteles(700, 50, "imagenes/tela.png");
         tela4 = new Carteles(1000, 50, "imagenes/tela.png");
-        arania1 = new Enemigos(100, 50, "arania", "imagenes/arania.png");
-        arania2 = new Enemigos(400, 50, "arania", "imagenes/arania.png");
-        arania3 = new Enemigos(700, 50, "arania", "imagenes/arania.png");
-        arania4 = new Enemigos(1000, 50, "arania", "imagenes/arania.png");
+        arania1 = new Arania(100, 50);
+        arania2 = new Arania(400, 50);
+        arania3 = new Arania(700, 50);
+        arania4 = new Arania(1000, 50);
         animal1 = new Animal(100, 50, "imagenes/animal1.png", KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, "mono");
         animal2 = new Animal(400, 500, "imagenes/animal2.png", KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, "");
         animal3 = new Animal(400, 500, "imagenes/animal3.png", KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_J, KeyEvent.VK_L, "");
         animal4 = new Animal(400, 500, "imagenes/animal4.png", KeyEvent.VK_T, KeyEvent.VK_G, KeyEvent.VK_F, KeyEvent.VK_H, "");
-        
-        Timer timer = new Timer(30, e -> {
+        avispas = new Avispa[10];
+
+        for (int i = 0; i < avispas.length; i++) {
+            int randomX = r.nextInt(1200); 
+            avispas[i] = new Avispa(randomX, 50);
+        }
+
+        Timer timer = new Timer(velocidad, e -> {
             moverAranias();
+            moverAvispas();
             animal1.mover();
             animal2.mover();
             animal3.mover();
@@ -69,6 +82,14 @@ public class Escenario extends JPanel implements KeyListener {
             arania4.setY(50);
 
         repaint();
+    }
+    public void moverAvispas() {
+        for (int i = 0; i < avispas.length; i++) {
+            avispas[i].setY(avispas[i].getY() + 1);
+            if (avispas[i].getY() > getHeight()) {
+                avispas[i].setVisible(0);
+            }
+        }
     }
     // Manejo de teclas presionadas
     public void keyPressed(KeyEvent e) {
@@ -106,5 +127,9 @@ public class Escenario extends JPanel implements KeyListener {
         animal2.dibujar(g);
         animal3.dibujar(g);
         animal4.dibujar(g);
+
+        for (int i = 0; i < avispas.length; i++) {
+            avispas[i].dibujar(g);
+        }
     }
 }
