@@ -11,12 +11,12 @@ import javax.swing.Timer;
 public class Escenario extends JPanel implements KeyListener {
     Image fondo;
     Random r;
-    Enemigos arania1;
-    Enemigos arania2;
-    Enemigos arania3;
-    Enemigos arania4;
-    Enemigos [] avispas;
-    int velocidad = 100;
+    Arania arania1;
+    Arania arania2;
+    Arania arania3;
+    Arania arania4;
+    Avispa [] avispas;
+    int velocidad = 8;//menos es mas rapido
     Carteles tela1;
     Carteles tela2;
     Carteles tela3;
@@ -39,22 +39,22 @@ public class Escenario extends JPanel implements KeyListener {
         tela2 = new Carteles(400, 50, "imagenes/tela.png");
         tela3 = new Carteles(700, 50, "imagenes/tela.png");
         tela4 = new Carteles(1000, 50, "imagenes/tela.png");
-        arania1 = new Enemigos(100, 50, "arania", "imagenes/arania.png");
-        arania2 = new Enemigos(400, 50, "arania", "imagenes/arania.png");
-        arania3 = new Enemigos(700, 50, "arania", "imagenes/arania.png");
-        arania4 = new Enemigos(1000, 50, "arania", "imagenes/arania.png");
+        arania1 = new Arania(100, 50);
+        arania2 = new Arania(400, 50);
+        arania3 = new Arania(700, 50);
+        arania4 = new Arania(1000, 50);
         animal1 = new Animal(100, 50, "imagenes/animal1.png", KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, "mono");
         animal2 = new Animal(400, 500, "imagenes/animal2.png", KeyEvent.VK_W, KeyEvent.VK_S, KeyEvent.VK_A, KeyEvent.VK_D, "");
         animal3 = new Animal(400, 500, "imagenes/animal3.png", KeyEvent.VK_I, KeyEvent.VK_K, KeyEvent.VK_J, KeyEvent.VK_L, "");
         animal4 = new Animal(400, 500, "imagenes/animal4.png", KeyEvent.VK_T, KeyEvent.VK_G, KeyEvent.VK_F, KeyEvent.VK_H, "");
-        avispas = new Enemigos[10];
+        avispas = new Avispa[10];
 
         for (int i = 0; i < avispas.length; i++) {
             int randomX = r.nextInt(1200); 
-            avispas[i] = new Enemigos(randomX, 50, "avispa", "imagenes/avispa.png");
+            avispas[i] = new Avispa(randomX, 50);
         }
 
-        Timer timer = new Timer(30, e -> {
+        Timer timer = new Timer(velocidad, e -> {
             moverAranias();
             moverAvispas();
             animal1.mover();
@@ -85,7 +85,7 @@ public class Escenario extends JPanel implements KeyListener {
     }
     public void moverAvispas() {
         for (int i = 0; i < avispas.length; i++) {
-            avispas[i].setY(avispas[i].getY() + 5);
+            avispas[i].setY(avispas[i].getY() + 1);
             if (avispas[i].getY() > getHeight()) {
                 avispas[i].setVisible(0);
             }
